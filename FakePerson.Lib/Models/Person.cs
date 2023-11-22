@@ -1,7 +1,20 @@
-﻿namespace FakePerson.Lib.Models;
+﻿using System.Text.Json.Serialization;
 
-public class Person
+namespace FakePerson.Lib.Models;
+
+public record Person
 {
     public required AbstractName Name { get; init; }
-    public required AbstractPhone Phone { get; set; }
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public AbstractPhone? Phone { get; set; }
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public int? Age { get; set; }
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Email { get; set; }
+    
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? Address { get; set; }
 }

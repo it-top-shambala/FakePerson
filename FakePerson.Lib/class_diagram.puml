@@ -1,0 +1,95 @@
+﻿@startuml
+'https://plantuml.com/class-diagram
+
+package Models {
+    abstract class AbstractName {
+        + FirstName : string
+    }
+    package Names {
+        AbstractName <|-- RussianName
+        class RussianName {
+            + LastName : string
+            + Patronymic : string
+        }
+        
+        AbstractName <|-- SimpleName
+        class SimpleName {}
+    }
+    
+    abstract class AbstractPhone {
+        + Number : string
+    }
+    
+    package Phones {
+        AbstractPhone <|-- SimplePhone
+        class SimplePhone {}
+        
+        AbstractPhone <|-- Phone
+        class Phone {
+            + Operator : string
+        }
+    }
+    
+    AbstractName <--* Person
+    AbstractPhone <--* Person
+    class Person {
+        + Name : AbstractName
+        + Phone : AbstractPhone
+        + Age : int
+        + Email : string
+        + Address : string
+    }
+}
+
+Random <|-- RandomExtensions
+class RandomExtensions {
+    + {static} NextString() : string
+}
+
+interface IRandom<<T>>
+{
+    + {abstract} Get() : T
+}
+
+IRandom <|.. RussianNameRandom
+RandomExtensions <-- RussianNameRandom
+class RussianNameRandom {
+    - listOfLastNames : string[]
+    - listOfFirstNames : string[]
+    - listOfPatronymics : string[]
+    
+    + RussianNameRandom()
+    
+    + Get() : RussianName
+}
+
+
+
+package Factories {
+    interface IFactory <<T>> {
+        + {abstract} Create() : T
+    }
+    
+    AbstractName <.. RandomAbstractNameFactory
+    IFactory <|.. RandomAbstractNameFactory
+    IFactory <--* RandomAbstractNameFactory
+    class RandomAbstractNameFactory {
+        - factory : IFactory<AbstractName>
+        
+        + RandomAbstractNameFactory(factory : IFactory<AbstractName>)
+        
+        + Create() : AbstractName
+    }
+    
+    package NameFactories {
+        
+        RussianName <.. RandomRussianNameFactory
+        IFactory <|.. RandomRussianNameFactory
+        IRandom <--* RandomRussianNameFactory
+        class RandomRussianNameFactory {
+            - random : IRandom<RussianName>
+        }
+    }
+}
+
+@enduml
